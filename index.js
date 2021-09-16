@@ -1,5 +1,8 @@
 import express from "express";
 import puppeteer from "puppeteer";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const app = express();
 
@@ -26,12 +29,11 @@ app.get("/api", async (req, res) => {
   const {url} = req.query;
   if(!url) return res.status(400).send()
   const images = await getImages(url);
-  console.log(images);
   if(images == undefined || images.length < 1)  return res.status(404).send()
   res.status(200).send({images})
 });
 
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 2000, () => {
   console.log("App is running ");
 });

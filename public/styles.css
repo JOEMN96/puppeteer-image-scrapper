@@ -57,11 +57,13 @@ button {
   .list {
       display: flex;
       justify-content: space-between;
+      justify-content: center;
       flex-wrap: wrap;
   }
   
   .list > div {
       width: 33%;
+      margin: 10px;
   }
 
   .list img {

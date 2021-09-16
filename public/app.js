@@ -19,7 +19,7 @@ function poplulateDom (val) {
   if(val === null) {
     return area.innerHTML = `<p>Please Provide a website with images !<p>`
   } else if (val == undefined) {
-    return area.innerHTML =`<div class="loadersmall"></div>`     
+    return area.innerHTML =`<div> <div class="loadersmall"></div> </div>`     
   }
   if(typeof val === 'object') {
     const template = val.map(item => {
@@ -28,6 +28,7 @@ function poplulateDom (val) {
       <img src='${item}'> </img>
       </div>
       `
+      
     })
     area.innerHTML = template.join(' ')
   } 
