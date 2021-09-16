@@ -26,7 +26,8 @@ app.get("/api", async (req, res) => {
   const {url} = req.query;
   if(!url) return res.status(400).send()
   const images = await getImages(url);
-  if(images.length < 1)  return res.status(404).send()
+  console.log(images);
+  if(images == undefined || images.length < 1)  return res.status(404).send()
   res.status(200).send({images})
 });
 
