@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import io from "./socket.js";
 
 import { getImages } from "./scrapper.js";
 
@@ -18,6 +19,8 @@ app.get("/api", async (req, res) => {
   res.status(200).send({ images });
 });
 
-app.listen(process.env.PORT || 2000, () => {
+const server = app.listen(process.env.PORT || 2000, () => {
   console.log("App is running ");
 });
+
+io(server);

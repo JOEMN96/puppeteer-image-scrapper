@@ -1,5 +1,6 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
+import ioInstance from "./socket.js";
 
 function isURL(str) {
   var pattern = new RegExp(
@@ -87,3 +88,5 @@ export const getImages = async (url) => {
     }
   }
 };
+
+const io = ioInstance();
