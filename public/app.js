@@ -1,14 +1,18 @@
 const form = document.querySelector("form");
 var socket = io.connect("http://localhost:2000/");
+let codeBlock = document.querySelector("code");
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+  codeBlock.innerHTML = "";
+
   poplulateDom();
   try {
     const res = await fetch(`/api?url=${form.url.value.trim()}`);
     const data = await res.json();
     poplulateDom(data.images);
+    codeBlock.innerHTML = "";
   } catch (e) {
-    console.log(e.message);
     poplulateDom(null);
   }
 });
@@ -16,10 +20,14 @@ form.addEventListener("submit", async (e) => {
 function poplulateDom(val) {
   const area = document.querySelector(".list");
   if (val === null) {
-    return (area.innerHTML = `<p>Please Provide a website with images !<p>`);
+    codeBlock.innerHTML = "";
+    return (area.innerHTML = `<p>Please Provide a website with images ! <p> `);
   } else if (val == undefined) {
-    return (area.innerHTML = `<div> <div class="loadersmall"></div> </div>`);
+    codeBlock.innerHTML = "";
+    return (area.innerHTML = `<pre><code></code> </pre>`);
   }
+  codeBlock.innerHTML = "";
+
   if (typeof val === "object") {
     const template = val.map((item) => {
       return `
@@ -32,7 +40,16 @@ function poplulateDom(val) {
   }
 }
 
+const populateLogs = (val) => {
+  if (val.err) {
+    codeBlock.innerHTML += `<span class="red">${val.err}</span>` + "<br>";
+    return (codeBlock.scrollTop = codeBlock.scrollHeight);
+  }
+  codeBlock.innerHTML += `<span class="green">${val.log}</span>` + "<br>";
+  codeBlock.scrollTop = codeBlock.scrollHeight;
+};
+
 const soketsend = document.querySelector(".socket");
 socket.on("logs", (data) => {
-  console.log(data);
+  populateLogs(data);
 });

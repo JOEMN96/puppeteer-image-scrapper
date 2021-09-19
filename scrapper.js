@@ -3,7 +3,12 @@ import axios from "axios";
 
 function isURL(str) {
   var pattern = new RegExp(
-    "^(https?:\\/\\/)?" + "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|" + "((\\d{1,3}\\.){3}\\d{1,3}))" + "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + "(\\?[;&a-z\\d%_.~+=-]*)?" + "(\\#[-a-z\\d_]*)?$",
+    "^(https?:\\/\\/)?" +
+      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|" +
+      "((\\d{1,3}\\.){3}\\d{1,3}))" +
+      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" +
+      "(\\?[;&a-z\\d%_.~+=-]*)?" +
+      "(\\#[-a-z\\d_]*)?$",
     "i"
   );
   return pattern.test(str);
@@ -19,11 +24,9 @@ export const getImages = async (url, io) => {
   }
 
   io.sockets.emit("logs", {
-    message: "ggs",
-    handle: "dd",
+    log: `Loading ...`,
   });
 
-  console.log("Loading");
   let rooturl = url;
   let pages = new Set();
   pages.add(url);
@@ -34,7 +37,6 @@ export const getImages = async (url, io) => {
     let data = await scrape(url);
     return Array.from(data);
   } catch (e) {
-    console.log(e.message);
     if (pages[iteration]) {
       iteration++;
       pages[iteration];
@@ -45,7 +47,9 @@ export const getImages = async (url, io) => {
     try {
       const { data } = await axios.get(url);
       let $ = cheerio.load(data);
-
+      io.sockets.emit("logs", {
+        log: `Fetching Images from --> ${url}`,
+      });
       // ? Getting all urls in Page
       $("a").each((index, item) => {
         if (!item.attribs.href) {
@@ -79,11 +83,13 @@ export const getImages = async (url, io) => {
       if (pages.getByIndex(iteration)) {
         return scrape(pages.getByIndex(iteration));
       } else {
-        console.log("Done");
+        //* IF Everything Goes well !!
         return images;
       }
     } catch (error) {
-      console.log(error.message);
+      io.sockets.emit("logs", {
+        err: `Something went wrong in  --> ${error.message}`,
+      });
       iteration++;
       if (pages.getByIndex(iteration)) {
         return scrape(pages.getByIndex(iteration));
