@@ -1,5 +1,5 @@
 const form = document.querySelector("form");
-var socket = io.connect("http://localhost:2000/");
+var socket = io.connect();
 let codeBlock = document.querySelector("code");
 
 form.addEventListener("submit", async (e) => {
