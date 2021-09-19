@@ -1,6 +1,5 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import ioInstance from "./socket.js";
 
 function isURL(str) {
   var pattern = new RegExp(
@@ -14,10 +13,16 @@ Set.prototype.getByIndex = function (index) {
   return [...this][index];
 };
 
-export const getImages = async (url) => {
+export const getImages = async (url, io) => {
   if (url.endsWith("/")) {
     url = url.slice(0, -1);
   }
+
+  io.sockets.emit("logs", {
+    message: "ggs",
+    handle: "dd",
+  });
+
   console.log("Loading");
   let rooturl = url;
   let pages = new Set();
@@ -88,5 +93,3 @@ export const getImages = async (url) => {
     }
   }
 };
-
-const io = ioInstance();

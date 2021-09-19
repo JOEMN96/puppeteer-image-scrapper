@@ -1,5 +1,5 @@
 const form = document.querySelector("form");
-var socket = io();
+var socket = io.connect("http://localhost:2000/");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   poplulateDom();
@@ -32,6 +32,7 @@ function poplulateDom(val) {
   }
 }
 
-socket.on("message", function (msg) {
-  console.log(msg);
+const soketsend = document.querySelector(".socket");
+socket.on("logs", (data) => {
+  console.log(data);
 });
